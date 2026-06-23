@@ -21,13 +21,18 @@
     /* ===== AUTH VIEW ===== */
     .shell{min-height:100vh;display:grid;grid-template-columns:1.05fr 1fr;}
     .brand{position:relative;overflow:hidden;background:radial-gradient(120% 90% at 15% 10%,var(--brine) 0%,var(--brine-700) 55%,var(--ink) 100%);color:#eaf3f2;padding:clamp(28px,5vw,64px);display:flex;flex-direction:column;justify-content:space-between;}
+    .brand-slides{position:absolute;inset:0;z-index:0;}
+    .brand-slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1.6s ease-in-out;}
+    .brand-slide.active{opacity:1;}
+    .brand-tint{position:absolute;inset:0;z-index:1;background:linear-gradient(150deg,rgba(11,61,73,.82),rgba(10,39,47,.9));}
+    .brand-body{position:relative;z-index:2;}
     .eyebrow{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#8fc4c4;font-weight:600;}
     .brand h1{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(30px,4vw,50px);line-height:1.05;margin:18px 0 0;letter-spacing:-.01em;}
     .brand .lede{margin-top:18px;max-width:30ch;color:#bcd6d6;font-size:16px;line-height:1.55;}
-    .marks{display:flex;gap:34px;margin-top:30px;position:relative;z-index:1;}
+    .marks{display:flex;gap:34px;margin-top:30px;position:relative;z-index:2;}
     .mark .n{font-family:"Fraunces",serif;font-size:26px;font-weight:600;color:#fff;}
     .mark .l{font-size:12px;color:#8fc4c4;margin-top:2px;}
-    .wave{position:absolute;left:0;right:0;bottom:-2px;width:100%;height:90px;opacity:.5;}
+    .wave{position:absolute;left:0;right:0;bottom:-2px;width:100%;height:90px;opacity:.5;z-index:2;}
     .panel{display:flex;align-items:center;justify-content:center;padding:clamp(24px,4vw,56px);}
     .card{width:100%;max-width:440px;background:var(--shell);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:30px;}
     .tabs{display:flex;gap:4px;background:var(--foam);padding:4px;border-radius:11px;margin-bottom:24px;}
@@ -52,6 +57,8 @@
     .glyph{width:16px;height:16px;border-radius:50%;background:var(--brine);color:#fff;font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;}
     .hint{text-align:center;font-size:12px;color:var(--mist);margin-top:10px;min-height:1em;}
     .note{font-size:12px;color:var(--mist);margin-top:14px;line-height:1.5;}
+    .textlink{background:none;border:0;color:var(--coral);font:600 13px "Inter",sans-serif;cursor:pointer;padding:0;}
+    .textlink:hover{text-decoration:underline;}
     .alert{border-radius:10px;padding:12px 14px;font-size:14px;margin-top:16px;}
     .alert.ok{background:var(--ok-bg);border:1px solid var(--ok-bd);color:var(--ok-tx);}
     .alert.err{background:var(--err-bg);border:1px solid var(--err-bd);color:var(--err-tx);}
@@ -102,7 +109,13 @@
   <!-- ================= AUTH VIEW ================= -->
   <div id="auth-view" class="shell">
     <aside class="brand">
-      <div>
+      <div class="brand-slides" aria-hidden="true">
+        <div class="brand-slide active" style="background-image:url('https://images.unsplash.com/photo-1687706418918-1c95d829b478?auto=format&amp;fit=crop&amp;w=1400&amp;q=70')"></div>
+        <div class="brand-slide" style="background-image:url('https://images.unsplash.com/photo-1677138731542-14355c3f894d?auto=format&amp;fit=crop&amp;w=1400&amp;q=70')"></div>
+        <div class="brand-slide" style="background-image:url('https://images.unsplash.com/photo-1518291920814-7c4e747d17db?auto=format&amp;fit=crop&amp;w=1400&amp;q=70')"></div>
+      </div>
+      <div class="brand-tint" aria-hidden="true"></div>
+      <div class="brand-body">
         <div class="eyebrow">Balıklıova · Aegean Coast</div>
         <h1>Balıklıova Seafood Cooperative</h1>
         <p class="lede">Register your boat or your business to join the daily online fish auction.</p>
@@ -169,6 +182,7 @@
           <div class="field"><label>Email</label><input id="si-email" type="email" placeholder="you@example.com" /></div>
           <div class="field"><label>Password</label><input id="si-password" type="password" placeholder="Your password" /></div>
           <button class="btn btn-primary" id="si-submit">Sign in</button>
+          <p style="text-align:center;margin-top:12px"><button class="textlink" id="forgot-link" type="button">Forgot your password?</button></p>
           <div class="divider">or</div>
           <div class="social">
             <button class="btn btn-ghost" data-social="Google"><span class="glyph">G</span> Continue with Google</button>
@@ -176,6 +190,18 @@
           </div>
           <p class="hint"></p>
           <div id="si-result"></div>
+        </section>
+
+        <section id="view-reset" class="hidden">
+          <h2>Reset password</h2>
+          <p class="sub">Enter your account email and choose a new password.</p>
+          <div class="field"><label>Email</label><input id="ri-email" type="email" placeholder="you@example.com" /></div>
+          <div class="field"><label>New password</label><input id="ri-pass" type="password" placeholder="New password" /></div>
+          <div class="field"><label>Confirm new password</label><input id="ri-pass2" type="password" placeholder="Repeat new password" /></div>
+          <button class="btn btn-primary" id="ri-submit">Update password</button>
+          <p style="text-align:center;margin-top:12px"><button class="textlink" id="back-signin" type="button">Back to sign in</button></p>
+          <div id="ri-result"></div>
+          <p class="note">Demo flow: the password is reset directly here. In a production system this step would be confirmed through a one-time link sent to your email.</p>
         </section>
       </div>
     </main>
@@ -202,6 +228,19 @@
     </main>
   </div>
 
+  <script>
+    (function () {
+      var slides = document.querySelectorAll('.brand-slide');
+      if (slides.length < 2) return;
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var i = 0;
+      setInterval(function () {
+        slides[i].classList.remove('active');
+        i = (i + 1) % slides.length;
+        slides[i].classList.add('active');
+      }, 4500);
+    })();
+  </script>
   <script src="/main.js"></script>
 </body>
 </html>
